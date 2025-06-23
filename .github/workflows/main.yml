@@ -3,7 +3,7 @@ name: 🚀 Déploiement IA + Streamlit sur Hugging Face
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   deploy:
