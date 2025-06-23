@@ -1,0 +1,51 @@
+name: 🚀 Déploiement IA + Streamlit sur Hugging Face
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📦 Cloner le dépôt
+        uses: actions/checkout@v3
+        with:
+          lfs: true
+
+      - name: 🐍 Configurer Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: 📥 Installer les dépendances
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: 🧹 Prétraitement des données
+        run: python preprocessing.py
+
+      - name: 🤖 Entraîner le modèle
+        run: python training.py
+
+      - name: 🧪 Évaluer le modèle
+        run: python evaluation.py
+
+      - name: 🔍 Tester une prédiction
+        run: python model.py
+
+      - name: 📧 Envoyer une notification par email
+        run: python send_email.py
+
+      - name: 📂 Préparer le dossier Hugging Face
+        run: |
+          mkdir -p hf_space
+          cp app.py hf_space/
+          cp model.py hf_space/
+          cp -r model/ hf_space/
+          cp README.md hf_space/
+          echo "streamlit run app.py" > hf_space/app.sh
+          chmod +x hf_space/app.sh
